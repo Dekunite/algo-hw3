@@ -1,8 +1,7 @@
 /* @Author
 Student Name: <Muhammet Derviş Kopuz>
 Student ID : <504201531>
-Date: <20/04/2021> 
-Question 1
+Date: <19/05/2021> 
 */
 
 #include <iostream>
@@ -13,446 +12,219 @@ Question 1
 #include <list>
 #include <algorithm>
 
+#include <cmath>
+#include <string>
+#include <cstdlib>
+
 using namespace std;
-#define INF 0x6FFFFFFF
 
-//Class to hold building names and assigned numbers
-class Building {
-	private:
-		string name;
-		int number;
+double penalty = -4;
+int ind;
 
-	public:
-		Building(string name, int number);
-		Building();
-		string getName();
-		int getNumber();
-};
-
-//constructor
-Building::Building(string name, int number) {
-	this->name = name;
-	this->number = number;
-}
-
-//empty constructor
-Building::Building() {
-	
-}
-
-//getter
-string Building::getName() {
-	return name;
-}
-
-//getter
-int Building::getNumber() {
-	return number;
-}
-
-//class to hold every edge
-class Edge {
-	private:
-		Building source;
-		Building dest;
-		int weight;
-
-	public:
-		Edge(Building source, Building dest, int weight);
-		Edge();
-		Building getSource();
-		Building getDest();
-		int getWeight();
-
-};
-
-//constructor
-Edge::Edge(Building source, Building dest, int weight) {
-	this->source = source;
-	this->dest = dest;
-	this->weight = weight;
-}
-
-//empty constructor
-Edge::Edge() {
-	
-}
-
-//getter
-Building Edge::getSource() {return source;}
-
-//getter
-Building Edge::getDest() {return dest;}
-
-//getter
-int Edge::getWeight() {return weight;}
-
-class Graph {
-	private:
-		//number of vertices in the graph
-		int numberOfVertices;
-
-    //Every building and its weight is stored in an adjacency list
-		list< pair<Building, int> > *adj;
-		
-	public:
-		Graph(int numberOfVertices);
-		void AddEdge(Building source, Building destination, int weight);
-		void FindPrimMST(Building startVertex, vector<Building>* buildings, vector<Edge>* edges);
-		
-};
-
-// constructor for the graph
-Graph::Graph(int numberOfVertices) {
-  this->numberOfVertices = numberOfVertices;
-  adj = new list< pair<Building, int> >[numberOfVertices];
-}
-
-void Graph::AddEdge(Building source, Building destination, int weight) {
-	//adds the corresponding building and weight pair to the adjacency list of both source and destination
-  adj[source.getNumber()].push_back(make_pair(destination, weight));
-	adj[destination.getNumber()].push_back(make_pair(source, weight));
-}
-
-//For rule 4 GP must be connected to a church
-Building firstChurch(list< pair<Building, int> > *adj, vector<bool> MST, vector<int>* dist, int sourceNumber) {
-	list< pair<Building, int> >::iterator i;
-	Building destination;
-	int destinationWeight;
-	Building cheapestDest;
-	int cheapestWeight = INF;
-	//traverse adjacency list of source
-	for (i = adj[sourceNumber].begin(); i != adj[sourceNumber].end(); ++i) {
-		destination = (*i).first;
-		destinationWeight = (*i).second;
-
-		//If it isnt a Church continue
-		if (!(destination.getName().compare(0,2,"Ch") == 0)) {
-			continue;
-		}
-
-		//store the cheapest church
-		if (destinationWeight < cheapestWeight) {
-			cheapestWeight = destinationWeight;
-			cheapestDest = destination;
-		}
-	}
-
-	//check if destination is operated on before using the MST vector.
-	//if the total distance can be reduced  
-	if (MST[cheapestDest.getNumber()] == false && dist->at(cheapestDest.getNumber()) > cheapestWeight)
+double similarityScore(char a, char b)
+{
+	double result;
+	if(a==b)
 	{
-		//update/reduce the distance
-		dist->at(cheapestDest.getNumber()) = cheapestWeight;
+		result=1;
 	}
-	return cheapestDest;
-}
-
-//Rule 5, GP and Hipp should be connected
-Building firstHipp(list< pair<Building, int> > *adj, vector<bool> MST, vector<int>* dist, int sourceNumber) {
-	list< pair<Building, int> >::iterator i;
-	Building destination;
-	int destinationWeight;
-	Building cheapestDest;
-	int cheapestWeight = INF;
-	//traverse adjacency list of source
-	for (i = adj[sourceNumber].begin(); i != adj[sourceNumber].end(); ++i) {
-		destination = (*i).first;
-		destinationWeight = (*i).second;
-
-		//find the hipp
-		if (!(destination.getName().compare(0,4,"Hipp") == 0)) {
-			continue;
-		}
-
-		//keep track of cheapest hipp
-		if (destinationWeight < cheapestWeight) {
-			cheapestWeight = destinationWeight;
-			cheapestDest = destination;
-		}
-	}
-
-	//check if destination is operated on before using the MST vector.
-	//if the total distance can be reduced  
-	if (MST[cheapestDest.getNumber()] == false && dist->at(cheapestDest.getNumber()) > cheapestWeight)
+	else
 	{
-		//update/reduce the dist
-		dist->at(cheapestDest.getNumber()) = cheapestWeight;
-
+		result=penalty;
 	}
-	return cheapestDest;
+	return result;
 }
 
-//get building name by assigned building number
-string getBuilding(int buildingNumber, vector<Building>* buildings) {
-	vector<Building>::iterator it;
-	//traverse buildings
-	for (it = buildings->begin(); it != buildings->end(); ++it) {
-		if((*it).getNumber() == buildingNumber) {
-			return (*it).getName();
-		}
-	}
-	return NULL;
+double findMax(double array[], int length)
+{
+	double max = array[0];
+	ind = 0;
 
-}
-
-void Graph::FindPrimMST(Building startvertex, vector<Building>* buildings, vector<Edge>* edges) {
-	priority_queue< pair<int, int>, vector< pair<int, int> >, greater< pair<int, int> > > pq;
-
-	Building src = startvertex;
-	bool firstConnectionChurch = false;
-	bool firstConnectionHipp = false;
-	string addedChurch;
-
-	//keep track of all distances for every vertex, initialize distances as infinite
-	vector<int> dist(numberOfVertices, INF);
-
-	//keep a parent array to indicate which vertex is connected to which vertex
-	//no parent = -1
-  vector<int> parent(numberOfVertices, -1);
-
-	//keep track of vertices which are operated on, no need to operate twice
-  vector<bool> MST(numberOfVertices, false);
-
-	//uzaklık, vertexNum 
-	//push source vertex in to priority queue
-  pq.push(make_pair(0, startvertex.getNumber()));
-	//initialize source's distance as 0 since it is the starting point
-  dist[src.getNumber()] = 0;
-
-	vector<string> doubleCheck;
-
-	//while priority queue is not empty
-  while (!pq.empty()) {
-		//priority queue holds (distance, building number)
-		//it is ordered by the first variable
-		//get the second variable for the element which has the smallest distance
-		int sourceNumber = pq.top().second;
-		//get the name of the source
-		string sourceName = getBuilding(sourceNumber, buildings);
-		//pop the first element from queue
-		pq.pop();
-
-		//mark the source as operated on
-		MST[sourceNumber] = true;
-
-		//first connection rule bw GP and church
-		if (!firstConnectionChurch) {
-			Building destination = firstChurch(adj, MST, &dist, sourceNumber);
-			addedChurch = destination.getName();
-
-			pq.push(make_pair(dist[destination.getNumber()], destination.getNumber()));
-			parent[destination.getNumber()] = sourceNumber;
-
-			firstConnectionChurch = true;
-		}
-
-		//first connection rule bw GP and Hipp
-		if (!firstConnectionHipp) {
-			Building destination = firstHipp(adj, MST, &dist, sourceNumber);
-
-			pq.push(make_pair(dist[destination.getNumber()], destination.getNumber()));
-			parent[destination.getNumber()] = sourceNumber;
-
-			firstConnectionHipp = true;
-		}
-
-		list< pair<Building, int> >::iterator i;
-		//traverse over all adjacent buildings for the source
-		for (i = adj[sourceNumber].begin(); i != adj[sourceNumber].end(); ++i)
+	for(int i=1; i<length; i++)
+	{
+		if(array[i] > max)
 		{
-				//get destination building
-				Building destination = (*i).first;
-				//get destination distance
-				int destinationWeight = (*i).second;
-
-				//skip Hipp it is already connected to GP
-				if ((destination.getName().compare("Hipp") == 0)) {
-					doubleCheck.push_back(sourceName);
-					continue;
-				}
-
-				//skip the first added church it is already connected to GP
-				if ((destination.getName().compare(addedChurch) == 0)) {
-					doubleCheck.push_back(sourceName);
-					continue;
-				}
-
-				//hipp and bassilica not connceted rule. Rule 6.
-				if ((sourceName.compare("Hipp")==0 && destination.getName().compare(0,3,"Bas")==0) || (sourceName.compare(0,3,"Bas")==0 && destination.getName().compare("Hipp")==0)) {
-					continue;
-				}
-
-				//important people houses not connected. Rule 7
-				if ((sourceName.compare(0,2,"Hp")==0 && destination.getName().compare(0,2,"Hp")==0) || (sourceName.compare(0,2,"Hp")==0 && destination.getName().compare(0,2,"Hp")==0)) {
-					continue;
-				}
-
-				//since we dont change the parent of Hipp and FirstChurch be sure to check them as the parent node while traversing
-				bool inList = ((find(doubleCheck.begin(), doubleCheck.end(), destination.getName()) != doubleCheck.end()) && sourceName.compare(addedChurch) == 0) ||
-											((find(doubleCheck.begin(), doubleCheck.end(), destination.getName()) != doubleCheck.end()) && sourceName.compare("Hipp") == 0);
-				//check if destination is operated on before using the MST vector.
-				//if the total distance can be reduced  
-				if ((MST[destination.getNumber()] == false && dist[destination.getNumber()] > destinationWeight) ||
-				 (inList && dist[destination.getNumber()] > destinationWeight))
-				{
-					//update/reduce the dist
-					dist[destination.getNumber()] = destinationWeight;
-
-					//push the pair consisting of (new distance for destination, destination)
-					pq.push(make_pair(dist[destination.getNumber()], destination.getNumber()));
-					//assign source as parent to destination / connect destination and source
-					parent[destination.getNumber()] = sourceNumber;
-				}
+			max = array[i];
+			ind=i;
 		}
-
 	}
-
-	//create a sorte edges vector to print edges is ascending order using the parent vector
-	vector<Edge> sortedEdges;
-	for (int i = 1; i < numberOfVertices; ++i) {
-		int buildingNum = parent[i];
-		string sourceName = buildings->at(buildingNum).getName();
-		string destName = buildings->at(i).getName();
-		
-		//iterate over all edges
-		vector<Edge>::iterator edgeIt;
-		for (edgeIt = edges->begin(); edgeIt != edges->end(); ++edgeIt) {
-			Edge currentEdge = (*edgeIt);
-			
-			//push edges in to sorted edges vector
-			if (currentEdge.getSource().getName() == sourceName && currentEdge.getDest().getName() == destName) {
-				sortedEdges.push_back(currentEdge);
-			} else if (currentEdge.getSource().getName() == destName && currentEdge.getDest().getName() == sourceName) {
-				sortedEdges.push_back(currentEdge);
-			}
-		}
-
-		
-	}
-		int totalWeight = 0;
-		//while sortedEdges is not empty
-		while (!sortedEdges.empty()) {
-			//İnitialize as infinite
-			int minWeight = INF;
-			Building minSource;
-			Building minDest;
-			vector<Edge>::iterator minEdge;
-			vector<Edge>::iterator edgeIt;
-			//iterate over sortedEdges
-			for (edgeIt = sortedEdges.begin(); edgeIt != sortedEdges.end(); ++edgeIt) {
-				Edge currentEdge = *edgeIt;
-
-				//keep track of smallest edge
-				if (currentEdge.getWeight() < minWeight) {
-					minWeight = currentEdge.getWeight();
-					minSource = currentEdge.getSource();
-					minDest = currentEdge.getDest();
-					minEdge = edgeIt;
-				}
-
-			}
-			cout << minSource.getName() << " " << minDest.getName() << " " << minWeight << "\n";
-			totalWeight += minWeight;
-			sortedEdges.erase(minEdge);
-		}
-		cout << totalWeight << "\n";
+	return max;
 }
+
 
 
 int main() {
 
   string fname;
-  //fname = "city_plan_1.txt";
+  fname = "strings.txt";
 	//get file name
-  cin >> fname;
-  ifstream city_plan(fname);
+  //cin >> fname;
+  ifstream filename(fname);
 
-  string source;
-  string dest;
-  string weight;
-  string line;
-
-	int buildingCounter = 0;
-	//init buildings vector
-	vector<Building>* buildings = new vector<Building>;
-	//init edges vector
-	vector<Edge>* edges = new vector<Edge>;
-	Building startVertex; 
+  string word;
+	vector<string> words;
 
 	//read file
-  while (getline(city_plan, line)) {
-    stringstream ss(line);
-		//split by ","
-    getline(ss, source, ',');
-    getline(ss, dest, ',');
-    getline(ss, weight, ',');
-
-		Building* newBuildingS;
-		Building* newBuildingD;
-
-		//if building counter = 0, directly push buildings in to buildings vector.
-		if(buildingCounter == 0) {
-			newBuildingS = new Building(source, buildingCounter);
-			//assign first building to startvertex GP in test cases
-			startVertex = *newBuildingS;
-			buildings->push_back(*newBuildingS);
-			buildingCounter++;
-			newBuildingD = new Building(dest, buildingCounter);
-			buildings->push_back(*newBuildingD);
-			buildingCounter++;
-
-			Edge* newEdge = new Edge(*newBuildingS, *newBuildingD, stoi(weight));
-			//push new edge in to edges vector
-			edges->push_back(*newEdge);
-		} else {
-			vector<Building>::iterator buildIt;
-			bool sourcePresent = false;
-			bool destPresent = false;
-
-			//check the buildings in the new loop. If they are new or existing
-			for (buildIt = buildings->begin(); buildIt != buildings->end(); ++buildIt ) {
-				if ((*buildIt).getName() == source) {
-					sourcePresent = true;
-					*newBuildingS = *buildIt;
-				}
-				if ((*buildIt).getName() == dest) {
-					destPresent = true;
-					*newBuildingD = *buildIt;
-				}
-			}
-
-			//if new building push to buildings vector
-			if (!sourcePresent){
-				newBuildingS = new Building(source, buildingCounter);
-				buildings->push_back(*newBuildingS);
-				buildingCounter++;
-			}
-			//if new building push to buildings vector
-			if (!destPresent) {
-				newBuildingD = new Building(dest, buildingCounter);
-				buildings->push_back(*newBuildingD);
-				buildingCounter++;
-			}
-
-			//push the new edge to edges vector
-			Edge* newEdge = new Edge(*newBuildingS, *newBuildingD, stoi(weight));
-			edges->push_back(*newEdge);
-		}
-  }
-
-	//initialize the graph with number of vertices equal to buidings size
-	Graph g(buildings->size());
-
-	//add every edge to the graph
-	vector<Edge>::iterator ite;
-	for (ite = edges->begin(); ite != edges->end(); ++ite ) {
-		//std::cout << (*ite).getSource().getName() << " " << (*ite).getDest().getName() << " " << (*ite).getWeight() << endl;
-		g.AddEdge((*ite).getSource(), (*ite).getDest(), (*ite).getWeight());
+  while (filename >> word) {
+		words.push_back(word);
 	}
-	
-	//find MST with prim's algorithm and print the result
-	g.FindPrimMST(startVertex, buildings, edges);
+
+	//print words
+	for (int i=0; i<words.size(); i++) {
+		cout << words.at(i) << endl;
+	}
+
+	string word1 = words[0];
+	string word2 = words[1];
+	cout << "word1: " << word1 << " word2: " << word2 << endl;
+
+	//word lengths
+	int length1 = word1.length();
+	int length2 = word2.length();
+
+	//init matrix
+	double matrix[length1+1][length2+1];
+	for(int i = 0; i<=length1; i++) {
+		for(int j=0; j<=length2; j++) {
+			//her yeri 0 la
+			matrix[i][j]=0;
+		}
+	}
+
+	double traceback[4];
+	int I_i[length1+1][length2+1];
+	int I_j[length1+1][length2+1];
+
+	//filling the matrix
+	for(int i=1; i<=length1; i++) {
+		for(int j = 1; j<=length2; j++) {
+			cout << i << " " << j << endl;
+			traceback[0] = matrix[i-1][j-1];
+			traceback[0] = matrix[i-1][j-1]+similarityScore(word1[i-1], word2[j-1]);
+			traceback[1] = matrix[i-1][j]+penalty;
+			traceback[2] = matrix[i][j-1]+penalty;
+			traceback[3] = 0;
+			matrix[i][j] = findMax(traceback, 4);
+
+			switch(ind)
+			{
+				case 0:
+					I_i[i][j] = i-1;
+					I_j[i][j] = j-1;
+					break;
+				case 1:
+					I_i[i][j] = i-1;
+					I_j[i][j] = j;
+					break;
+				case 2:
+					I_i[i][j] = i;
+					I_j[i][j] = j-1;
+					break;
+				case 3:
+					I_i[i][j] = i;
+					I_j[i][j] = j;
+					break;
+			}
+		}
+	}
+
+	// print the scoring matrix to console
+	for(int i=1;i<length1;i++)
+	{
+		for(int j=1;j<length2;j++)
+		{
+			cout << matrix[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	//find max score in matrix
+	double matrix_max = 0;
+	int i_max = 0, j_max = 0;
+	for(int i = 1; i < length1; i++) {
+		for (int j = 1; j < length2; j++) {
+
+			if(matrix[i][j] > matrix_max) {
+				matrix_max = matrix[i][j];
+				i_max = i;
+				j_max = j;
+			}
+
+		}
+	}
+
+	cout << "Max score in the matrix is " << matrix_max << endl;
+
+	//traceback
+	int current_i = i_max;
+	int current_j = j_max;
+	int next_i = I_i[current_i][current_j];
+	int next_j = I_j[current_i][current_j];
+	int tick = 0;
+
+	char consensus_a[length1 + length2 + 2];
+	char consensus_b[length1 + length2 + 2];
+
+	while(((current_i != next_i) || (current_j != next_j)) && (next_i != 0) && (next_i != 0)) {
+
+		if(next_i == current_i) {
+			//deletion in A
+			consensus_a[tick] = '-';
+		} else {
+			//match/mismatch in A
+			consensus_a[tick] = word1[current_i-1];
+		}
+
+		if(next_j == current_j) {
+			//deletion in B
+			consensus_b[tick] = '-';
+		} else {
+			//match/mismatch in B
+			consensus_b[tick] = word2[current_j-1];
+		}
+
+		if (next_i == 0) {
+			next_i = -1;
+		} else if (next_j == 0) {
+			next_j = -1;
+		} else {
+			current_i = next_i;
+			current_j = next_j;
+			next_i = I_i[current_i][current_j];
+			next_j = I_j[current_i][current_j];
+		}
+		tick++;
+	}
+
+	//print consensus sequence
+	cout<<endl<<" "<<endl;
+	cout<<"Alignment:"<<endl<<endl;
+	for(int i=0;i<length1;i++){
+		cout<<word1[i];
+	}
+	cout<<"  and ";
+	for(int i=0;i<length2;i++){
+		cout<<word2[i];
+	}
+	cout<<endl<<endl; 
+
+	//ptritn conssss
+	cout << consensus_a <<endl;
+	cout << consensus_b <<endl;
+
+	for(int i = tick-1; i>=0; i--) {
+		cout<<consensus_a[i]; 
+	}
+	cout<<endl;
+	for(int j = tick-1; j>=0; j--) {
+		cout<<consensus_b[j];
+	}
+	cout<<endl;
+
+
+
+	cout <<"the end"<<endl;
+
 	
 	return 0;
 }
