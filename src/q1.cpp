@@ -74,156 +74,182 @@ int main() {
 		cout << words.at(i) << endl;
 	}
 
+	/*
 	string word1 = words[1];
 	string word2 = words[2];
 	cout << "word1: " << word1 << " word2: " << word2 << endl;
+	*/
 
-	//word lengths
-	int length1 = word1.length();
-	int length2 = word2.length();
-
-	//init matrix
-	double matrix[length1+1][length2+1];
-	for(int i = 0; i<=length1; i++) {
-		for(int j=0; j<=length2; j++) {
-			//her yeri 0 la
-			matrix[i][j]=0;
+	string word1, word2;
+	int firstWordCounter = 0;
+	int secondWordCounter = 0;
+	int secondWordRef = 0;
+	//loop through words
+	for (firstWordCounter; firstWordCounter<words.size(); firstWordCounter++) {
+		//skip over comparing the same words
+		if(firstWordCounter == secondWordCounter) {
+			secondWordCounter++;
 		}
-	}
+		for (secondWordCounter; secondWordCounter < words.size(); secondWordCounter++) {
 
-	double traceback[4];
-	int I_i[length1+1][length2+1];
-	int I_j[length1+1][length2+1];
+			word1 = words[firstWordCounter];
+			word2 = words[secondWordCounter];
+			cout << "word1: " << word1 << " word2: " << word2 << endl;
 
-	//filling the matrix
-	for(int i=1; i<=length1; i++) {
-		for(int j = 1; j<=length2; j++) {
-			cout << i << " " << j << endl;
-			traceback[0] = matrix[i-1][j-1]+similarityScore(word1[i-1], word2[j-1]);
-			traceback[1] = matrix[i-1][j]+penalty;
-			traceback[2] = matrix[i][j-1]+penalty;
-			traceback[3] = 0;
-			matrix[i][j] = findMax(traceback, 4);
 
-			switch(ind)
+			//word lengths
+			int length1 = word1.length();
+			int length2 = word2.length();
+
+			//init matrix
+			double matrix[length1+1][length2+1];
+			for(int i = 0; i<=length1; i++) {
+				for(int j=0; j<=length2; j++) {
+					//her yeri 0 la
+					matrix[i][j]=0;
+				}
+			}
+
+			double traceback[4];
+			int I_i[length1+1][length2+1];
+			int I_j[length1+1][length2+1];
+
+			//filling the matrix
+			for(int i=1; i<=length1; i++) {
+				for(int j = 1; j<=length2; j++) {
+					//cout << i << " " << j << endl;
+					traceback[0] = matrix[i-1][j-1]+similarityScore(word1[i-1], word2[j-1]);
+					traceback[1] = matrix[i-1][j]+penalty;
+					traceback[2] = matrix[i][j-1]+penalty;
+					traceback[3] = 0;
+					matrix[i][j] = findMax(traceback, 4);
+
+					switch(ind)
+					{
+						case 0:
+							I_i[i][j] = i-1;
+							I_j[i][j] = j-1;
+							break;
+						case 1:
+							I_i[i][j] = i-1;
+							I_j[i][j] = j;
+							break;
+						case 2:
+							I_i[i][j] = i;
+							I_j[i][j] = j-1;
+							break;
+						case 3:
+							I_i[i][j] = i;
+							I_j[i][j] = j;
+							break;
+					}
+				}
+			}
+
+			
+			// print the scoring matrix to console
+			for(int i=0;i<=length1;i++)
 			{
-				case 0:
-					I_i[i][j] = i-1;
-					I_j[i][j] = j-1;
-					break;
-				case 1:
-					I_i[i][j] = i-1;
-					I_j[i][j] = j;
-					break;
-				case 2:
-					I_i[i][j] = i;
-					I_j[i][j] = j-1;
-					break;
-				case 3:
-					I_i[i][j] = i;
-					I_j[i][j] = j;
-					break;
-			}
-		}
-	}
-
-	// print the scoring matrix to console
-	for(int i=0;i<=length1;i++)
-	{
-		for(int j=0;j<=length2;j++)
-		{
-			cout << matrix[i][j] << " ";
-		}
-		cout << endl;
-	}
-
-	//find max score in matrix
-	double matrix_max = 0;
-	int i_max = 0, j_max = 0;
-	for(int i = 1; i <= length1; i++) {
-		for (int j = 1; j <= length2; j++) {
-
-			if(matrix[i][j] > matrix_max) {
-				matrix_max = matrix[i][j];
-				i_max = i;
-				j_max = j;
+				for(int j=0;j<=length2;j++)
+				{
+					cout << matrix[i][j] << " ";
+				}
+				cout << endl;
 			}
 
+			//find max score in matrix
+			double matrix_max = 0;
+			int i_max = 0, j_max = 0;
+			for(int i = 1; i <= length1; i++) {
+				for (int j = 1; j <= length2; j++) {
+
+					if(matrix[i][j] > matrix_max) {
+						matrix_max = matrix[i][j];
+						i_max = i;
+						j_max = j;
+					}
+
+				}
+			}
+
+			cout << "Max score in the matrix is " << matrix_max << endl;
+
+			//traceback
+			int current_i = i_max;
+			int current_j = j_max;
+			int next_i = I_i[current_i][current_j];
+			int next_j = I_j[current_i][current_j];
+			int tick = 0;
+
+			char consensus_a[length1 + length2 + 2];
+			char consensus_b[length1 + length2 + 2];
+
+			while(((current_i != next_i) || (current_j != next_j)) && (next_i != 0) && (next_i != 0)) {
+
+				if(next_i == current_i) {
+					//deletion in A
+					consensus_a[tick] = '-';
+				} else {
+					//match/mismatch in A
+					consensus_a[tick] = word1[current_i-1];
+				}
+
+				if(next_j == current_j) {
+					//deletion in B
+					consensus_b[tick] = '-';
+				} else {
+					//match/mismatch in B
+					consensus_b[tick] = word2[current_j-1];
+				}
+
+				if (next_i == 0) {
+					next_i = -1;
+				} else if (next_j == 0) {
+					next_j = -1;
+				} else {
+					current_i = next_i;
+					current_j = next_j;
+					next_i = I_i[current_i][current_j];
+					next_j = I_j[current_i][current_j];
+				}
+				tick++;
+			}
+
+			//print consensus sequence
+			cout<<endl<<" "<<endl;
+			//cout << "consesus a :" << consensus_a <<endl;
+			//cout << "consesus b :" << consensus_b <<endl;
+			//print output
+			cout << word1 << " - " << word2 << endl;
+			cout << "Score: " << tick << " Sequence(s): " ;
+			cout << "\"" ;
+			for(int i = tick-1; i>=0; i--) {
+				cout<<consensus_a[i]; 
+			} 
+			cout << "\"" << endl;
+
+			/*
+			//ptritn conssss
+			cout << consensus_a <<endl;
+			cout << consensus_b <<endl;
+
+			for(int i = tick-1; i>=0; i--) {
+				cout<<consensus_a[i]; 
+			}
+			cout<<endl;
+			for(int j = tick-1; j>=0; j--) {
+				cout<<consensus_b[j];
+			}
+			cout<<endl;
+			*/
+
+			cout <<"the end"<<endl;
 		}
+
+		secondWordRef++;
+		secondWordCounter = secondWordRef;
+
 	}
-
-	cout << "Max score in the matrix is " << matrix_max << endl;
-
-	//traceback
-	int current_i = i_max;
-	int current_j = j_max;
-	int next_i = I_i[current_i][current_j];
-	int next_j = I_j[current_i][current_j];
-	int tick = 0;
-
-	char consensus_a[length1 + length2 + 2];
-	char consensus_b[length1 + length2 + 2];
-
-	while(((current_i != next_i) || (current_j != next_j)) && (next_i != 0) && (next_i != 0)) {
-
-		if(next_i == current_i) {
-			//deletion in A
-			consensus_a[tick] = '-';
-		} else {
-			//match/mismatch in A
-			consensus_a[tick] = word1[current_i-1];
-		}
-
-		if(next_j == current_j) {
-			//deletion in B
-			consensus_b[tick] = '-';
-		} else {
-			//match/mismatch in B
-			consensus_b[tick] = word2[current_j-1];
-		}
-
-		if (next_i == 0) {
-			next_i = -1;
-		} else if (next_j == 0) {
-			next_j = -1;
-		} else {
-			current_i = next_i;
-			current_j = next_j;
-			next_i = I_i[current_i][current_j];
-			next_j = I_j[current_i][current_j];
-		}
-		tick++;
-	}
-
-	//print consensus sequence
-	cout<<endl<<" "<<endl;
-	cout<<"Alignment:"<<endl<<endl;
-	for(int i=0;i<length1+1;i++){
-		cout<<word1[i];
-	}
-	cout<<"  and ";
-	for(int i=0;i<length2+1;i++){
-		cout<<word2[i];
-	}
-	cout<<endl<<endl; 
-
-	//ptritn conssss
-	cout << consensus_a <<endl;
-	cout << consensus_b <<endl;
-
-	for(int i = tick-1; i>=0; i--) {
-		cout<<consensus_a[i]; 
-	}
-	cout<<endl;
-	for(int j = tick-1; j>=0; j--) {
-		cout<<consensus_b[j];
-	}
-	cout<<endl;
-
-
-
-	cout <<"the end"<<endl;
-
 	
 	return 0;
 }
