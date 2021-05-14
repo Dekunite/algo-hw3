@@ -74,8 +74,8 @@ int main() {
 		cout << words.at(i) << endl;
 	}
 
-	string word1 = words[0];
-	string word2 = words[1];
+	string word1 = words[1];
+	string word2 = words[2];
 	cout << "word1: " << word1 << " word2: " << word2 << endl;
 
 	//word lengths
@@ -99,7 +99,6 @@ int main() {
 	for(int i=1; i<=length1; i++) {
 		for(int j = 1; j<=length2; j++) {
 			cout << i << " " << j << endl;
-			traceback[0] = matrix[i-1][j-1];
 			traceback[0] = matrix[i-1][j-1]+similarityScore(word1[i-1], word2[j-1]);
 			traceback[1] = matrix[i-1][j]+penalty;
 			traceback[2] = matrix[i][j-1]+penalty;
@@ -129,9 +128,9 @@ int main() {
 	}
 
 	// print the scoring matrix to console
-	for(int i=1;i<length1;i++)
+	for(int i=0;i<=length1;i++)
 	{
-		for(int j=1;j<length2;j++)
+		for(int j=0;j<=length2;j++)
 		{
 			cout << matrix[i][j] << " ";
 		}
@@ -141,8 +140,8 @@ int main() {
 	//find max score in matrix
 	double matrix_max = 0;
 	int i_max = 0, j_max = 0;
-	for(int i = 1; i < length1; i++) {
-		for (int j = 1; j < length2; j++) {
+	for(int i = 1; i <= length1; i++) {
+		for (int j = 1; j <= length2; j++) {
 
 			if(matrix[i][j] > matrix_max) {
 				matrix_max = matrix[i][j];
@@ -199,11 +198,11 @@ int main() {
 	//print consensus sequence
 	cout<<endl<<" "<<endl;
 	cout<<"Alignment:"<<endl<<endl;
-	for(int i=0;i<length1;i++){
+	for(int i=0;i<length1+1;i++){
 		cout<<word1[i];
 	}
 	cout<<"  and ";
-	for(int i=0;i<length2;i++){
+	for(int i=0;i<length2+1;i++){
 		cout<<word2[i];
 	}
 	cout<<endl<<endl; 
