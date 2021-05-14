@@ -56,7 +56,7 @@ double findMax(double array[], int length)
 int main() {
 
   string fname;
-  fname = "strings1.txt";
+  fname = "strings.txt";
 	//get file name
   //cin >> fname;
   ifstream filename(fname);
@@ -216,7 +216,7 @@ int main() {
 				int next_j = I_j[current_i][current_j];
 				tick = 0;
 
-				while(((current_i != next_i) || (current_j != next_j)) && (next_i >= 0) && (next_i >= 0)) {
+				while(((current_i != next_i) || (current_j != next_j)) && (next_i >= 0) && (next_j >= 0)) {
 
 					//cout << word1[current_i-1] << endl;
 
@@ -233,6 +233,7 @@ int main() {
 						consensus_b[tick] = '-';
 					} else {
 						//match/mismatch in B
+						//burada patlıyor
 						consensus_b[tick] = word2[current_j-1];
 					}
 
@@ -251,6 +252,9 @@ int main() {
 
 					tick++;
 				}
+				//if (find(overlaps.begin(), overlaps.end(), consensus_a) != overlaps.end()) {
+
+				//}
 				overlaps.push_back(consensus_a);
 				//overlaps.push_back(*consensus_b);
 
