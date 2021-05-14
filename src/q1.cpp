@@ -18,7 +18,7 @@ Date: <19/05/2021>
 
 using namespace std;
 
-double penalty = -4;
+double penalty = -2;
 int ind;
 
 double similarityScore(char a, char b)
@@ -184,7 +184,7 @@ int main() {
 			char consensus_a[length1 + length2 + 2];
 			char consensus_b[length1 + length2 + 2];
 
-			while(((current_i != next_i) || (current_j != next_j)) && (next_i != 0) && (next_i != 0)) {
+			while(((current_i != next_i) || (current_j != next_j)) && (next_i >= 0) && (next_i >= 0)) {
 
 				if(next_i == current_i) {
 					//deletion in A
@@ -216,7 +216,6 @@ int main() {
 			}
 
 			//print consensus sequence
-			cout<<endl<<" "<<endl;
 			//cout << "consesus a :" << consensus_a <<endl;
 			//cout << "consesus b :" << consensus_b <<endl;
 			//print output
@@ -242,8 +241,9 @@ int main() {
 			}
 			cout<<endl;
 			*/
-
-			cout <<"the end"<<endl;
+			cout <<consensus_a<<endl;
+			cout <<consensus_b<<endl;
+			cout <<"the end \n\n"<<endl;
 		}
 
 		secondWordRef++;
