@@ -105,8 +105,8 @@ int main() {
 			int length1 = word1.length();
 			int length2 = word2.length();
 
-			char commonSeq[length1 + length2 + 2];
-			char consensus_b[length1 + length2 + 2];
+			char commonSeq1[length1 + length2 + 2];
+			char commonSeq2[length1 + length2 + 2];
 
 			//init matrix
 			double matrix[length1+1][length2+1];
@@ -165,18 +165,16 @@ int main() {
 			}
 			*/
 
-			//find max score in matrix
 			double maximum = 0;
 			int iMax = 0, jMax = 0;
-			int maxScoreCount = 0;
 			//vector to hold index of maximum numbers (i, j)
 			vector<int> iAndJMax;
+			//find maximum number in the matrix
 			for(int i = 1; i <= length1; i++) {
 				for (int j = 1; j <= length2; j++) {
 
 					if(matrix[i][j] > maximum) {
 						//reset score count and vector if maximimum increases
-						maxScoreCount = 0;
 						iAndJMax.clear();
 
 						maximum = matrix[i][j];
@@ -193,7 +191,6 @@ int main() {
 						
 						iAndJMax.push_back(iMax);
 						iAndJMax.push_back(jMax);
-						maxScoreCount++;
 					}
 
 				}
@@ -219,19 +216,19 @@ int main() {
 
 					if(nextI == currentI) {
 						//deletion in A
-						commonSeq[counter] = '-';
+						commonSeq1[counter] = '-';
 					} else {
 						//match/mismatch in A
-						commonSeq[counter] = word1[currentI-1];
+						commonSeq1[counter] = word1[currentI-1];
 					}
 
 					if(nextJ == currentJ) {
 						//deletion in B
-						consensus_b[counter] = '-';
+						commonSeq2[counter] = '-';
 					} else {
 						//match/mismatch in B
 						//burada patlıyor
-						consensus_b[counter] = word2[currentJ-1];
+						commonSeq2[counter] = word2[currentJ-1];
 					}
 
 					if (nextI == 0) {
@@ -245,28 +242,27 @@ int main() {
 						nextJ = matrixJ[currentI][currentJ];
 					}
 
-					//push overlaps to the vector
-
 					counter++;
 				}
-				string temp = commonSeq;
+				string temp = commonSeq1;
+				//skip over the same common sequences, dont push them to vector
 				if (!(find(overlaps.begin(), overlaps.end(), temp) != overlaps.end())) {
-					overlaps.push_back(commonSeq);
+					overlaps.push_back(commonSeq1);
 				}
-				//overlaps.push_back(*consensus_b);
+				//overlaps.push_back(*commonSeq2);
 
 				//print consensus sequence
-				//cout << "consesus a :" << commonSeq <<endl;
-				//cout << "consesus b :" << consensus_b <<endl;
+				//cout << "consesus a :" << commonSeq1 <<endl;
+				//cout << "consesus b :" << commonSeq2 <<endl;
 				//print output
 				/*
 					cout << word1 << " - " << word2 << endl;
 					cout << "Score: " << counter << " Sequence(s): " ;
 					cout << "\"" ;
 				for (int i = 0; i < overlaps.size(); i++) {
-					*commonSeq = overlaps[i];
+					*commonSeq1 = overlaps[i];
 					for(int i = counter-1; i>=0; i--) {
-						cout<<commonSeq[i]; 
+						cout<<commonSeq1[i]; 
 					} 
 				}
 					cout << "\"" << endl;
@@ -274,15 +270,15 @@ int main() {
 
 				/*
 				//ptritn conssss
-				cout << commonSeq <<endl;
-				cout << consensus_b <<endl;
+				cout << commonSeq1 <<endl;
+				cout << commonSeq2 <<endl;
 
 				for(int i = counter-1; i>=0; i--) {
-					cout<<commonSeq[i]; 
+					cout<<commonSeq1[i]; 
 				}
 				cout<<endl;
 				for(int j = counter-1; j>=0; j--) {
-					cout<<consensus_b[j];
+					cout<<commonSeq2[j];
 				}
 				cout<<endl;
 				*/
@@ -297,25 +293,25 @@ int main() {
 			cout << "Score: " << counter << " Sequence(s): " ;
 			for (int i = 0; i < overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
-				int newLetterCounter = 0;
 				
 				for(int k = counter-1; k>=0; k--) {
-					//newLetter[newLetterCounter] = overlapLetters[k]; 
 					newLetter += overlapLetters[k];
-					newLetterCounter++;
 				}
-				string temp = newLetter;
-				sortedLetters.push_back(temp);
+
+				sortedLetters.push_back(newLetter);
 				newLetter = "";
-				//newLetter = ' ';
 			}
 
-			//sort
+			//sort common sequences alphabetically
 			sort(sortedLetters.begin(),sortedLetters.end());
 			for(int i = 0; i < sortedLetters.size(); i++) {
 				cout << "\"" ;
 				cout << sortedLetters[i];
-				cout << "\" ";
+				if(i == (sortedLetters.size()-1)) {
+					cout << "\"";
+				} else {
+					cout << "\" ";
+				}
 			}
 			cout << endl;
 			overlaps.clear();
