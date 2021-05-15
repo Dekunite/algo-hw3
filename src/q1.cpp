@@ -18,7 +18,7 @@ Date: <19/05/2021>
 
 using namespace std;
 
-double penalty = -2;
+double penalty = -10;
 int ind;
 
 double similarityScore(char a, char b)
@@ -252,10 +252,10 @@ int main() {
 
 					tick++;
 				}
-				//if (find(overlaps.begin(), overlaps.end(), consensus_a) != overlaps.end()) {
-
-				//}
-				overlaps.push_back(consensus_a);
+				string temp = consensus_a;
+				if (!(find(overlaps.begin(), overlaps.end(), temp) != overlaps.end())) {
+					overlaps.push_back(consensus_a);
+				}
 				//overlaps.push_back(*consensus_b);
 
 				//print consensus sequence
@@ -293,15 +293,31 @@ int main() {
 
 			//sort overlaps alphabetically
 			sort(overlaps.begin(), overlaps.end());
+			vector<string> sortedLetters;
+			string newLetter = "";
 
 			cout << word1 << " - " << word2 << endl;
 			cout << "Score: " << tick << " Sequence(s): " ;
 			for (int i = 0; i < overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
-				cout << "\"" ;
+				int newLetterCounter = 0;
+				
 				for(int k = tick-1; k>=0; k--) {
-					cout<<overlapLetters[k]; 
-				} 
+					//newLetter[newLetterCounter] = overlapLetters[k]; 
+					newLetter += overlapLetters[k];
+					newLetterCounter++;
+				}
+				string temp = newLetter;
+				sortedLetters.push_back(temp);
+				newLetter = "";
+				//newLetter = ' ';
+			}
+
+			//sort
+			sort(sortedLetters.begin(),sortedLetters.end());
+			for(int i = 0; i < sortedLetters.size(); i++) {
+				cout << "\"" ;
+				cout << sortedLetters[i];
 				cout << "\" ";
 			}
 			cout << endl;
