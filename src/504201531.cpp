@@ -76,7 +76,7 @@ int main() {
 
 	/*
 	//print words
-	for (int i=0; i<words.size(); i++) {
+	for (int i=0; i< (int)words.size(); i++) {
 		cout << words.at(i) << endl;
 	}
 	*/
@@ -96,12 +96,12 @@ int main() {
 	vector<string> overlaps;
 
 	//loop through words
-	for (firstWordCounter; firstWordCounter<words.size(); firstWordCounter++) {
+	for (;firstWordCounter < (int)words.size(); firstWordCounter++) {
 		//skip over comparing the same words
 		if(firstWordCounter == secondWordCounter) {
 			secondWordCounter++;
 		}
-		for (secondWordCounter; secondWordCounter < words.size(); secondWordCounter++) {
+		for (; secondWordCounter < (int)words.size(); secondWordCounter++) {
 
 			word1 = words[firstWordCounter];
 			word2 = words[secondWordCounter];
@@ -111,7 +111,7 @@ int main() {
 			int length2 = word2.length();
 
 			char commonSeq1[length1 + length2 + 2];
-			char commonSeq2[length1 + length2 + 2];
+			//char commonSeq2[length1 + length2 + 2];
 
 			//init matrix
 			double matrix[length1+1][length2+1];
@@ -203,7 +203,7 @@ int main() {
 
 			//cout << "Max score in the matrix is " << maximum << endl;
 
-			for (int k = 0; k < iAndJMax.size(); k += 2) {
+			for (int k = 0; k < (int)iAndJMax.size(); k += 2) {
 				//assign the pair of max i and j
 				iMax = iAndJMax[k];
 				jMax = iAndJMax[k+1];
@@ -229,11 +229,11 @@ int main() {
 
 					if(nextJ == currentJ) {
 						//deletion in B
-						commonSeq2[counter] = '-';
+						//commonSeq2[counter] = '-';
 					} else {
 						//match/mismatch in B
 						//burada patlıyor
-						commonSeq2[counter] = word2[currentJ-1];
+						//commonSeq2[counter] = word2[currentJ-1];
 					}
 
 					if (nextI == 0) {
@@ -296,7 +296,7 @@ int main() {
 
 			cout << word1 << " - " << word2 << endl;
 			cout << "Score: " << counter << " Sequence(s): " ;
-			for (int i = 0; i < overlaps.size(); i++) {
+			for (int i = 0; i < (int)overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
 				
 				for(int k = counter-1; k>=0; k--) {
@@ -309,10 +309,10 @@ int main() {
 
 			//sort common sequences alphabetically
 			sort(sortedLetters.begin(),sortedLetters.end());
-			for(int i = 0; i < sortedLetters.size(); i++) {
+			for(int i = 0; i < (int)sortedLetters.size(); i++) {
 				cout << "\"" ;
 				cout << sortedLetters[i];
-				if(i == (sortedLetters.size()-1)) {
+				if(i == (int)(sortedLetters.size()-1)) {
 					cout << "\"";
 				} else {
 					cout << "\" ";
@@ -325,10 +325,10 @@ int main() {
 			output.open("output.txt", std::ios_base::app);
 			output << word1 << " - " << word2 << endl;
 			output << "Score: " << counter << " Sequence(s): " ;
-			for(int i = 0; i < sortedLetters.size(); i++) {
+			for(int i = 0; i < (int)sortedLetters.size(); i++) {
 				output << "\"" ;
 				output << sortedLetters[i];
-				if(i == (sortedLetters.size()-1)) {
+				if(i == (int)(sortedLetters.size()-1)) {
 					output << "\"";
 				} else {
 					output << "\" ";
