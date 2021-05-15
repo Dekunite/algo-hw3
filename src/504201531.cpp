@@ -61,6 +61,11 @@ int main() {
   string word;
 	vector<string> words;
 
+	//clear output.txt
+	ofstream output;
+	output.open("output.txt");
+	output.close();
+
 	//read file
   while (filename >> word) {
 		words.push_back(word);
@@ -314,6 +319,24 @@ int main() {
 				}
 			}
 			cout << endl;
+
+			//write to output file
+			ofstream output;
+			output.open("output.txt", std::ios_base::app);
+			output << word1 << " - " << word2 << endl;
+			output << "Score: " << counter << " Sequence(s): " ;
+			for(int i = 0; i < sortedLetters.size(); i++) {
+				output << "\"" ;
+				output << sortedLetters[i];
+				if(i == (sortedLetters.size()-1)) {
+					output << "\"";
+				} else {
+					output << "\" ";
+				}
+			}
+			output << endl;
+			output.close();
+
 			overlaps.clear();
 
 		}
