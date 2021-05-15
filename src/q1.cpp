@@ -19,33 +19,30 @@ Date: <19/05/2021>
 using namespace std;
 
 double penalty = -10;
-int ind;
+int index;
 
-double similarityScore(char a, char b)
+double checkSimilarity(char a, char b)
 {
 	double result;
-	if(a==b)
-	{
+	if(a==b) {
 		result=1;
 	}
-	else
-	{
+	else {
 		result=penalty;
 	}
+
 	return result;
 }
 
-double findMax(double array[], int length)
+double findMaximum(double traceback[], int length)
 {
-	double max = array[0];
-	ind = 0;
+	double max = traceback[0];
+	index = 0;
 
-	for(int i=1; i<length; i++)
-	{
-		if(array[i] > max)
-		{
-			max = array[i];
-			ind=i;
+	for(int i=1; i<length; i++) {
+		if(traceback[i] > max) {
+			max = traceback[i];
+			index=i;
 		}
 	}
 	return max;
@@ -89,7 +86,7 @@ int main() {
 	int firstWordCounter = 0;
 	int secondWordCounter = 0;
 	int secondWordRef = 0;
-	int tick;
+	int counter;
 	//vector to hold overlap letters
 	vector<string> overlaps;
 
@@ -108,49 +105,49 @@ int main() {
 			int length1 = word1.length();
 			int length2 = word2.length();
 
-			char consensus_a[length1 + length2 + 2];
+			char commonSeq[length1 + length2 + 2];
 			char consensus_b[length1 + length2 + 2];
 
 			//init matrix
 			double matrix[length1+1][length2+1];
-			for(int i = 0; i<=length1; i++) {
-				for(int j=0; j<=length2; j++) {
+			for(int i = 0; i <= length1; i++) {
+				for(int j = 0; j <= length2; j++) {
 					//her yeri 0 la
 					matrix[i][j]=0;
 				}
 			}
 
 			double traceback[4];
-			int I_i[length1+1][length2+1];
-			int I_j[length1+1][length2+1];
+			int matrixI[length1+1][length2+1];
+			int matrixJ[length1+1][length2+1];
 
 			//filling the matrix
-			for(int i=1; i<=length1; i++) {
-				for(int j = 1; j<=length2; j++) {
+			for(int i = 1; i <= length1; i++) {
+				for(int j = 1; j <= length2; j++) {
 					//cout << i << " " << j << endl;
-					traceback[0] = matrix[i-1][j-1]+similarityScore(word1[i-1], word2[j-1]);
-					traceback[1] = matrix[i-1][j]+penalty;
-					traceback[2] = matrix[i][j-1]+penalty;
+					traceback[0] = matrix[i-1][j-1] + checkSimilarity(word1[i-1], word2[j-1]);
+					traceback[1] = matrix[i-1][j] + penalty;
+					traceback[2] = matrix[i][j-1] + penalty;
 					traceback[3] = 0;
-					matrix[i][j] = findMax(traceback, 4);
+					matrix[i][j] = findMaximum(traceback, 4);
 
-					switch(ind)
+					switch(index)
 					{
 						case 0:
-							I_i[i][j] = i-1;
-							I_j[i][j] = j-1;
+							matrixI[i][j] = i-1;
+							matrixJ[i][j] = j-1;
 							break;
 						case 1:
-							I_i[i][j] = i-1;
-							I_j[i][j] = j;
+							matrixI[i][j] = i-1;
+							matrixJ[i][j] = j;
 							break;
 						case 2:
-							I_i[i][j] = i;
-							I_j[i][j] = j-1;
+							matrixI[i][j] = i;
+							matrixJ[i][j] = j-1;
 							break;
 						case 3:
-							I_i[i][j] = i;
-							I_j[i][j] = j;
+							matrixI[i][j] = i;
+							matrixJ[i][j] = j;
 							break;
 					}
 				}
@@ -169,107 +166,107 @@ int main() {
 			*/
 
 			//find max score in matrix
-			double matrix_max = 0;
-			int i_max = 0, j_max = 0;
+			double maximum = 0;
+			int iMax = 0, jMax = 0;
 			int maxScoreCount = 0;
 			//vector to hold index of maximum numbers (i, j)
 			vector<int> iAndJMax;
 			for(int i = 1; i <= length1; i++) {
 				for (int j = 1; j <= length2; j++) {
 
-					if(matrix[i][j] > matrix_max) {
+					if(matrix[i][j] > maximum) {
 						//reset score count and vector if maximimum increases
 						maxScoreCount = 0;
 						iAndJMax.clear();
 
-						matrix_max = matrix[i][j];
-						i_max = i;
-						j_max = j;
+						maximum = matrix[i][j];
+						iMax = i;
+						jMax = j;
 						
-						iAndJMax.push_back(i_max);
-						iAndJMax.push_back(j_max);
+						iAndJMax.push_back(iMax);
+						iAndJMax.push_back(jMax);
 
 						//record multiple maximums
-					} else if (matrix[i][j] == matrix_max) {
-						i_max = i;
-						j_max = j;
+					} else if (matrix[i][j] == maximum) {
+						iMax = i;
+						jMax = j;
 						
-						iAndJMax.push_back(i_max);
-						iAndJMax.push_back(j_max);
+						iAndJMax.push_back(iMax);
+						iAndJMax.push_back(jMax);
 						maxScoreCount++;
 					}
 
 				}
 			}
 
-			//cout << "Max score in the matrix is " << matrix_max << endl;
+			//cout << "Max score in the matrix is " << maximum << endl;
 
 			for (int k = 0; k < iAndJMax.size(); k += 2) {
 				//assign the pair of max i and j
-				i_max = iAndJMax[k];
-				j_max = iAndJMax[k+1];
+				iMax = iAndJMax[k];
+				jMax = iAndJMax[k+1];
 
 				//traceback
-				int current_i = i_max;
-				int current_j = j_max;
-				int next_i = I_i[current_i][current_j];
-				int next_j = I_j[current_i][current_j];
-				tick = 0;
+				int currentI = iMax;
+				int currentJ = jMax;
+				int nextI = matrixI[currentI][currentJ];
+				int nextJ = matrixJ[currentI][currentJ];
+				counter = 0;
 
-				while(((current_i != next_i) || (current_j != next_j)) && (next_i >= 0) && (next_j >= 0)) {
+				while(((currentI != nextI) || (currentJ != nextJ)) && (nextI >= 0) && (nextJ >= 0)) {
 
-					//cout << word1[current_i-1] << endl;
+					//cout << word1[currentI-1] << endl;
 
-					if(next_i == current_i) {
+					if(nextI == currentI) {
 						//deletion in A
-						consensus_a[tick] = '-';
+						commonSeq[counter] = '-';
 					} else {
 						//match/mismatch in A
-						consensus_a[tick] = word1[current_i-1];
+						commonSeq[counter] = word1[currentI-1];
 					}
 
-					if(next_j == current_j) {
+					if(nextJ == currentJ) {
 						//deletion in B
-						consensus_b[tick] = '-';
+						consensus_b[counter] = '-';
 					} else {
 						//match/mismatch in B
 						//burada patlıyor
-						consensus_b[tick] = word2[current_j-1];
+						consensus_b[counter] = word2[currentJ-1];
 					}
 
-					if (next_i == 0) {
-						next_i = -1;
-					} else if (next_j == 0) {
-						next_j = -1;
+					if (nextI == 0) {
+						nextI = -1;
+					} else if (nextJ == 0) {
+						nextJ = -1;
 					} else {
-						current_i = next_i;
-						current_j = next_j;
-						next_i = I_i[current_i][current_j];
-						next_j = I_j[current_i][current_j];
+						currentI = nextI;
+						currentJ = nextJ;
+						nextI = matrixI[currentI][currentJ];
+						nextJ = matrixJ[currentI][currentJ];
 					}
 
 					//push overlaps to the vector
 
-					tick++;
+					counter++;
 				}
-				string temp = consensus_a;
+				string temp = commonSeq;
 				if (!(find(overlaps.begin(), overlaps.end(), temp) != overlaps.end())) {
-					overlaps.push_back(consensus_a);
+					overlaps.push_back(commonSeq);
 				}
 				//overlaps.push_back(*consensus_b);
 
 				//print consensus sequence
-				//cout << "consesus a :" << consensus_a <<endl;
+				//cout << "consesus a :" << commonSeq <<endl;
 				//cout << "consesus b :" << consensus_b <<endl;
 				//print output
 				/*
 					cout << word1 << " - " << word2 << endl;
-					cout << "Score: " << tick << " Sequence(s): " ;
+					cout << "Score: " << counter << " Sequence(s): " ;
 					cout << "\"" ;
 				for (int i = 0; i < overlaps.size(); i++) {
-					*consensus_a = overlaps[i];
-					for(int i = tick-1; i>=0; i--) {
-						cout<<consensus_a[i]; 
+					*commonSeq = overlaps[i];
+					for(int i = counter-1; i>=0; i--) {
+						cout<<commonSeq[i]; 
 					} 
 				}
 					cout << "\"" << endl;
@@ -277,14 +274,14 @@ int main() {
 
 				/*
 				//ptritn conssss
-				cout << consensus_a <<endl;
+				cout << commonSeq <<endl;
 				cout << consensus_b <<endl;
 
-				for(int i = tick-1; i>=0; i--) {
-					cout<<consensus_a[i]; 
+				for(int i = counter-1; i>=0; i--) {
+					cout<<commonSeq[i]; 
 				}
 				cout<<endl;
-				for(int j = tick-1; j>=0; j--) {
+				for(int j = counter-1; j>=0; j--) {
 					cout<<consensus_b[j];
 				}
 				cout<<endl;
@@ -297,12 +294,12 @@ int main() {
 			string newLetter = "";
 
 			cout << word1 << " - " << word2 << endl;
-			cout << "Score: " << tick << " Sequence(s): " ;
+			cout << "Score: " << counter << " Sequence(s): " ;
 			for (int i = 0; i < overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
 				int newLetterCounter = 0;
 				
-				for(int k = tick-1; k>=0; k--) {
+				for(int k = counter-1; k>=0; k--) {
 					//newLetter[newLetterCounter] = overlapLetters[k]; 
 					newLetter += overlapLetters[k];
 					newLetterCounter++;
