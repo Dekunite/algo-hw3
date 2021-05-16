@@ -18,28 +18,30 @@ Date: <19/05/2021>
 
 using namespace std;
 
-double penalty = -4;
+double gap = -4;
+double mismatchValue = -2;
+double match = 1;
+int mismatchCount = 0;
 int index;
 
-double checkSimilarity(char a, char b)
-{
+double checkSimilarity(char a, char b) {
 	double result;
-	if(a==b) {
-		result=1;
+
+	if(a == b) {
+		result = match;
 	}
 	else {
-		result=penalty;
+		result = mismatchValue;
 	}
 
 	return result;
 }
 
-double findMaximum(double traceback[], int length)
-{
+double findMaximum(double traceback[]) {
 	double max = traceback[0];
 	index = 0;
 
-	for(int i=1; i<length; i++) {
+	for(int i = 1; i < 4; i++) {
 		if(traceback[i] > max) {
 			max = traceback[i];
 			index=i;
@@ -50,20 +52,42 @@ double findMaximum(double traceback[], int length)
 
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
   string fname;
+  string outputFname;
   fname = "strings.txt";
-	//get file name
-  //cin >> fname;
+	outputFname = "output.txt";
+	if (argc > 1) {
+		fname = argv[1];
+		cout << "fname: " << fname <<endl;;
+	}
+	if (argc > 2) {
+		outputFname = argv[2];
+		cout << "outputFname: " << outputFname <<endl;;
+	}
+	if (argc > 3) {
+		match = atoi(argv[3]);
+		cout << "match: " << match <<endl;;
+	}
+	if (argc > 4) {
+		mismatchValue = atoi(argv[4]);
+		cout << "mismatchValue: " << mismatchValue <<endl;;
+	}
+	if (argc > 5) {
+		gap = atoi(argv[5]);
+		cout << "gap: " << gap <<endl;;
+	}
+	/*
+	*/
   ifstream filename(fname);
 
   string word;
 	vector<string> words;
 
-	//clear output.txt
+	//clear outputFname
 	ofstream output;
-	output.open("output.txt");
+	output.open(outputFname);
 	output.close();
 
 	//read file
@@ -92,6 +116,7 @@ int main() {
 	int secondWordCounter = 0;
 	int secondWordRef = 0;
 	int counter;
+	int counterScore;
 	//vector to hold overlap letters
 	vector<string> overlaps;
 
@@ -131,10 +156,10 @@ int main() {
 				for(int j = 1; j <= length2; j++) {
 					//cout << i << " " << j << endl;
 					traceback[0] = matrix[i-1][j-1] + checkSimilarity(word1[i-1], word2[j-1]);
-					traceback[1] = matrix[i-1][j] + penalty;
-					traceback[2] = matrix[i][j-1] + penalty;
+					traceback[1] = matrix[i-1][j] + gap;
+					traceback[2] = matrix[i][j-1] + gap;
 					traceback[3] = 0;
-					matrix[i][j] = findMaximum(traceback, 4);
+					matrix[i][j] = findMaximum(traceback);
 
 					switch(index)
 					{
@@ -179,7 +204,7 @@ int main() {
 				for (int j = 1; j <= length2; j++) {
 
 					if(matrix[i][j] > maximum) {
-						//reset score count and vector if maximimum increases
+						//reset vector if maximimum increases
 						iAndJMax.clear();
 
 						maximum = matrix[i][j];
@@ -214,6 +239,7 @@ int main() {
 				int nextI = matrixI[currentI][currentJ];
 				int nextJ = matrixJ[currentI][currentJ];
 				counter = 0;
+				counterScore = 0;
 
 				while(((currentI != nextI) || (currentJ != nextJ)) && (nextI >= 0) && (nextJ >= 0)) {
 
@@ -225,6 +251,8 @@ int main() {
 					} else {
 						//match/mismatch in A
 						commonSeq1[counter] = word1[currentI-1];
+						counter++;
+						counterScore += match;
 					}
 
 					if(nextJ == currentJ) {
@@ -246,8 +274,10 @@ int main() {
 						nextI = matrixI[currentI][currentJ];
 						nextJ = matrixJ[currentI][currentJ];
 					}
-
-					counter++;
+					/*
+					counter+=match;
+					counterDivMatch = counter/match;
+					*/
 				}
 				string temp = commonSeq1;
 				//skip over the same common sequences, dont push them to vector
@@ -295,7 +325,7 @@ int main() {
 			string newLetter = "";
 
 			cout << word1 << " - " << word2 << endl;
-			cout << "Score: " << counter << " Sequence(s): " ;
+			cout << "Score: " << counterScore << " Sequence(s): " ;
 			for (int i = 0; i < (int)overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
 				
@@ -321,10 +351,11 @@ int main() {
 			cout << endl;
 
 			//write to output file
+			//int score = counterScore + (mismatchCount * mismatchValue);
 			ofstream output;
-			output.open("output.txt", std::ios_base::app);
+			output.open(outputFname, std::ios_base::app);
 			output << word1 << " - " << word2 << endl;
-			output << "Score: " << counter << " Sequence(s):" ;
+			output << "Score: " << counterScore << " Sequence(s):" ;
 			for(int i = 0; i < (int)sortedLetters.size(); i++) {
 				if(counter != 0) {
 					if (i == 0) {
@@ -345,6 +376,7 @@ int main() {
 
 			overlaps.clear();
 
+			mismatchCount = 0;
 		}
 
 		secondWordRef++;
