@@ -18,7 +18,7 @@ Date: <19/05/2021>
 
 using namespace std;
 
-double penalty = -10;
+double penalty = -4;
 int index;
 
 double checkSimilarity(char a, char b)
@@ -159,7 +159,7 @@ int main() {
 			}
 
 			/*
-			// print the scoring matrix to console
+			//print matrix
 			for(int i=0;i<=length1;i++)
 			{
 				for(int j=0;j<=length2;j++)
@@ -171,7 +171,7 @@ int main() {
 			*/
 
 			double maximum = 0;
-			int iMax = 0, jMax = 0;
+			int maxI = 0, maxJ = 0;
 			//vector to hold index of maximum numbers (i, j)
 			vector<int> iAndJMax;
 			//find maximum number in the matrix
@@ -183,19 +183,19 @@ int main() {
 						iAndJMax.clear();
 
 						maximum = matrix[i][j];
-						iMax = i;
-						jMax = j;
+						maxI = i;
+						maxJ = j;
 						
-						iAndJMax.push_back(iMax);
-						iAndJMax.push_back(jMax);
+						iAndJMax.push_back(maxI);
+						iAndJMax.push_back(maxJ);
 
 						//record multiple maximums
 					} else if (matrix[i][j] == maximum) {
-						iMax = i;
-						jMax = j;
+						maxI = i;
+						maxJ = j;
 						
-						iAndJMax.push_back(iMax);
-						iAndJMax.push_back(jMax);
+						iAndJMax.push_back(maxI);
+						iAndJMax.push_back(maxJ);
 					}
 
 				}
@@ -205,12 +205,12 @@ int main() {
 
 			for (int k = 0; k < (int)iAndJMax.size(); k += 2) {
 				//assign the pair of max i and j
-				iMax = iAndJMax[k];
-				jMax = iAndJMax[k+1];
+				maxI = iAndJMax[k];
+				maxJ = iAndJMax[k+1];
 
 				//traceback
-				int currentI = iMax;
-				int currentJ = jMax;
+				int currentI = maxI;
+				int currentJ = maxJ;
 				int nextI = matrixI[currentI][currentJ];
 				int nextJ = matrixJ[currentI][currentJ];
 				counter = 0;
@@ -324,14 +324,20 @@ int main() {
 			ofstream output;
 			output.open("output.txt", std::ios_base::app);
 			output << word1 << " - " << word2 << endl;
-			output << "Score: " << counter << " Sequence(s): " ;
+			output << "Score: " << counter << " Sequence(s):" ;
 			for(int i = 0; i < (int)sortedLetters.size(); i++) {
-				output << "\"" ;
-				output << sortedLetters[i];
-				if(i == (int)(sortedLetters.size()-1)) {
-					output << "\"";
-				} else {
-					output << "\" ";
+				if(counter != 0) {
+					if (i == 0) {
+						output << " \"" ;
+					} else {
+						output << "\"" ;
+					}
+					output << sortedLetters[i];
+					if(i == (int)(sortedLetters.size()-1)) {
+						output << "\"";
+					} else {
+						output << "\" ";
+					}
 				}
 			}
 			output << endl;
@@ -346,7 +352,5 @@ int main() {
 
 	}
 
-	cout <<"the end";
-	
 	return 0;
 }

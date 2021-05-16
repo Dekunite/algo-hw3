@@ -12,15 +12,15 @@ ability - conformity
 Score: 3 Sequence(s): "ity"
 ability - directive
 Score: 1 Sequence(s): "i" "t"
-ability - disctrict
+ability - district
 Score: 1 Sequence(s): "i" "t"
 ability - examination
-Score: 1 Sequence(s): "a" "i" "t"
-ability - fanimatio
 Score: 1 Sequence(s): "a" "i" "t"
 ability - flammable
 Score: 2 Sequence(s): "ab"
 ability - fountain
+Score: 1 Sequence(s): "a" "i" "t"
+ability - funimatio
 Score: 1 Sequence(s): "a" "i" "t"
 ability - information
 Score: 1 Sequence(s): "a" "i" "t"
@@ -48,16 +48,16 @@ automata - conformity
 Score: 1 Sequence(s): "m" "o" "t"
 automata - directive
 Score: 1 Sequence(s): "t"
-automata - disctrict
+automata - district
 Score: 1 Sequence(s): "t"
 automata - examination
 Score: 2 Sequence(s): "at"
-automata - fanimatio
-Score: 3 Sequence(s): "mat"
 automata - flammable
 Score: 2 Sequence(s): "ma"
 automata - fountain
 Score: 2 Sequence(s): "ta"
+automata - funimatio
+Score: 3 Sequence(s): "mat"
 automata - information
 Score: 3 Sequence(s): "mat"
 automata - malfunction
@@ -82,16 +82,16 @@ automative - conformity
 Score: 1 Sequence(s): "i" "m" "o" "t"
 automative - directive
 Score: 4 Sequence(s): "tive"
-automative - disctrict
+automative - district
 Score: 1 Sequence(s): "i" "t"
 automative - examination
 Score: 3 Sequence(s): "ati"
-automative - fanimatio
-Score: 4 Sequence(s): "mati"
 automative - flammable
 Score: 2 Sequence(s): "ma"
 automative - fountain
 Score: 1 Sequence(s): "a" "i" "o" "t" "u"
+automative - funimatio
+Score: 4 Sequence(s): "mati"
 automative - information
 Score: 4 Sequence(s): "mati"
 automative - malfunction
@@ -114,16 +114,16 @@ certificate - conformity
 Score: 1 Sequence(s): "c" "f" "i" "r" "t"
 certificate - directive
 Score: 2 Sequence(s): "ti"
-certificate - disctrict
+certificate - district
 Score: 2 Sequence(s): "ic"
 certificate - examination
-Score: 2 Sequence(s): "at" "ti"
-certificate - fanimatio
 Score: 2 Sequence(s): "at" "ti"
 certificate - flammable
 Score: 1 Sequence(s): "a" "e" "f"
 certificate - fountain
 Score: 1 Sequence(s): "a" "f" "i" "t"
+certificate - funimatio
+Score: 2 Sequence(s): "at" "ti"
 certificate - information
 Score: 2 Sequence(s): "at" "ti"
 certificate - malfunction
@@ -144,16 +144,16 @@ compatibility - conformity
 Score: 3 Sequence(s): "ity"
 compatibility - directive
 Score: 2 Sequence(s): "ti"
-compatibility - disctrict
+compatibility - district
 Score: 1 Sequence(s): "c" "i" "t"
 compatibility - examination
-Score: 3 Sequence(s): "ati"
-compatibility - fanimatio
 Score: 3 Sequence(s): "ati"
 compatibility - flammable
 Score: 1 Sequence(s): "a" "b" "l" "m"
 compatibility - fountain
 Score: 1 Sequence(s): "a" "i" "o" "t"
+compatibility - funimatio
+Score: 3 Sequence(s): "ati"
 compatibility - information
 Score: 3 Sequence(s): "ati"
 compatibility - malfunction
@@ -172,16 +172,16 @@ component - conformity
 Score: 2 Sequence(s): "co" "on"
 component - directive
 Score: 1 Sequence(s): "c" "e" "t"
-component - disctrict
+component - district
 Score: 1 Sequence(s): "c" "t"
 component - examination
 Score: 2 Sequence(s): "on"
-component - fanimatio
-Score: 1 Sequence(s): "m" "n" "o" "t"
 component - flammable
 Score: 1 Sequence(s): "e" "m"
 component - fountain
 Score: 2 Sequence(s): "nt"
+component - funimatio
+Score: 1 Sequence(s): "m" "n" "o" "t"
 component - information
 Score: 2 Sequence(s): "on"
 component - malfunction
@@ -198,16 +198,16 @@ component - qualify
 Score: 0 Sequence(s): ""
 conformity - directive
 Score: 1 Sequence(s): "c" "i" "r" "t"
-conformity - disctrict
+conformity - district
 Score: 1 Sequence(s): "c" "i" "r" "t"
 conformity - examination
 Score: 2 Sequence(s): "mi" "on"
-conformity - fanimatio
-Score: 1 Sequence(s): "f" "i" "m" "n" "o" "t"
 conformity - flammable
 Score: 1 Sequence(s): "f" "m"
 conformity - fountain
 Score: 2 Sequence(s): "fo"
+conformity - funimatio
+Score: 1 Sequence(s): "f" "i" "m" "n" "o" "t"
 conformity - information
 Score: 5 Sequence(s): "nform"
 conformity - malfunction
@@ -222,16 +222,16 @@ conformity - predict
 Score: 1 Sequence(s): "c" "i" "r" "t"
 conformity - qualify
 Score: 1 Sequence(s): "f" "i" "y"
-directive - disctrict
+directive - district
 Score: 2 Sequence(s): "ct" "di"
 directive - examination
-Score: 2 Sequence(s): "ti"
-directive - fanimatio
 Score: 2 Sequence(s): "ti"
 directive - flammable
 Score: 1 Sequence(s): "e"
 directive - fountain
 Score: 1 Sequence(s): "i" "t"
+directive - funimatio
+Score: 2 Sequence(s): "ti"
 directive - information
 Score: 2 Sequence(s): "ti"
 directive - malfunction
@@ -246,34 +246,34 @@ directive - predict
 Score: 2 Sequence(s): "ct" "di" "re"
 directive - qualify
 Score: 1 Sequence(s): "i"
-disctrict - examination
+district - examination
 Score: 1 Sequence(s): "i" "t"
-disctrict - fanimatio
-Score: 1 Sequence(s): "i" "t"
-disctrict - flammable
+district - flammable
 Score: 0 Sequence(s): ""
-disctrict - fountain
+district - fountain
 Score: 1 Sequence(s): "i" "t"
-disctrict - information
+district - funimatio
+Score: 1 Sequence(s): "i" "t"
+district - information
 Score: 1 Sequence(s): "i" "r" "t"
-disctrict - malfunction
+district - malfunction
 Score: 2 Sequence(s): "ct"
-disctrict - medication
+district - medication
 Score: 2 Sequence(s): "di" "ic"
-disctrict - paramedic
+district - paramedic
 Score: 2 Sequence(s): "di" "ic"
-disctrict - personality
+district - personality
 Score: 1 Sequence(s): "i" "r" "s" "t"
-disctrict - predict
+district - predict
 Score: 3 Sequence(s): "ict"
-disctrict - qualify
+district - qualify
 Score: 1 Sequence(s): "i"
-examination - fanimatio
-Score: 4 Sequence(s): "atio"
 examination - flammable
 Score: 2 Sequence(s): "am"
 examination - fountain
 Score: 2 Sequence(s): "in"
+examination - funimatio
+Score: 4 Sequence(s): "atio"
 examination - information
 Score: 5 Sequence(s): "ation"
 examination - malfunction
@@ -288,26 +288,10 @@ examination - predict
 Score: 1 Sequence(s): "e" "i" "t"
 examination - qualify
 Score: 1 Sequence(s): "a" "i"
-fanimatio - flammable
-Score: 2 Sequence(s): "ma"
-fanimatio - fountain
-Score: 1 Sequence(s): "a" "f" "i" "n" "o" "t"
-fanimatio - information
-Score: 5 Sequence(s): "matio"
-fanimatio - malfunction
-Score: 3 Sequence(s): "tio"
-fanimatio - medication
-Score: 4 Sequence(s): "atio"
-fanimatio - paramedic
-Score: 1 Sequence(s): "a" "i" "m"
-fanimatio - personality
-Score: 1 Sequence(s): "a" "i" "n" "o" "t"
-fanimatio - predict
-Score: 1 Sequence(s): "i" "t"
-fanimatio - qualify
-Score: 1 Sequence(s): "a" "f" "i"
 flammable - fountain
 Score: 1 Sequence(s): "a" "f"
+flammable - funimatio
+Score: 2 Sequence(s): "ma"
 flammable - information
 Score: 2 Sequence(s): "ma"
 flammable - malfunction
@@ -322,6 +306,8 @@ flammable - predict
 Score: 1 Sequence(s): "e"
 flammable - qualify
 Score: 1 Sequence(s): "a" "f" "l"
+fountain - funimatio
+Score: 2 Sequence(s): "un"
 fountain - information
 Score: 2 Sequence(s): "fo" "in"
 fountain - malfunction
@@ -335,6 +321,20 @@ Score: 1 Sequence(s): "a" "i" "n" "o" "t"
 fountain - predict
 Score: 1 Sequence(s): "i" "t"
 fountain - qualify
+Score: 1 Sequence(s): "a" "f" "i" "u"
+funimatio - information
+Score: 5 Sequence(s): "matio"
+funimatio - malfunction
+Score: 3 Sequence(s): "fun" "tio"
+funimatio - medication
+Score: 4 Sequence(s): "atio"
+funimatio - paramedic
+Score: 1 Sequence(s): "a" "i" "m"
+funimatio - personality
+Score: 1 Sequence(s): "a" "i" "n" "o" "t"
+funimatio - predict
+Score: 1 Sequence(s): "i" "t"
+funimatio - qualify
 Score: 1 Sequence(s): "a" "f" "i" "u"
 information - malfunction
 Score: 4 Sequence(s): "tion"
