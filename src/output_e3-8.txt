@@ -1,5 +1,5 @@
 anafram - anagram
-Score: 14 Sequence(s): "anafram"
+Score: 10 Sequence(s): "anafram"
 anafram - frame
 Score: 8 Sequence(s): "fram"
 anafram - gramaphone

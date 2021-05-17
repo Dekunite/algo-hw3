@@ -1,0 +1,24 @@
+ability - automata
+Score: 1 Sequence(s): "a" "t"
+ability - automative
+Score: 1 Sequence(s): "a" "i" "t"
+ability - certificate
+Score: 1 Sequence(s): "a" "i" "t"
+ability - compatibility
+Score: 6 Sequence(s): "bility"
+ability - component
+Score: 1 Sequence(s): "t"
+ability - conformity
+Score: 3 Sequence(s): "ity"
+ability - directive
+Score: 1 Sequence(s): "i" "t"
+ability - district
+Score: 1 Sequence(s): "i" "t"
+ability - examination
+Score: 1 Sequence(s): "a" "i" "t"
+ability - flammable
+Score: 2 Sequence(s): "ab"
+ability - fountain
+Score: 1 Sequence(s): "a" "i" "t"
+ability - funimatio
+Score: 1 Sequence(s): "a" "i" "t"

@@ -119,6 +119,7 @@ int main(int argc, char* argv[]) {
 	int counterScore;
 	//vector to hold overlap letters
 	vector<string> overlaps;
+	vector<string> overlaps2;
 
 	//loop through words
 	for (;firstWordCounter < (int)words.size(); firstWordCounter++) {
@@ -136,7 +137,7 @@ int main(int argc, char* argv[]) {
 			int length2 = word2.length();
 
 			char commonSeq1[length1 + length2 + 2];
-			//char commonSeq2[length1 + length2 + 2];
+			char commonSeq2[length1 + length2 + 2];
 
 			//init matrix
 			double matrix[length1+1][length2+1];
@@ -251,17 +252,17 @@ int main(int argc, char* argv[]) {
 					} else {
 						//match/mismatch in A
 						commonSeq1[counter] = word1[currentI-1];
-						counter++;
-						counterScore += match;
+						//counter++;
+						//counterScore += match;
 					}
 
 					if(nextJ == currentJ) {
 						//deletion in B
-						//commonSeq2[counter] = '-';
+						commonSeq2[counter] = '-';
 					} else {
 						//match/mismatch in B
 						//burada patlıyor
-						//commonSeq2[counter] = word2[currentJ-1];
+						commonSeq2[counter] = word2[currentJ-1];
 					}
 
 					if (nextI == 0) {
@@ -278,13 +279,18 @@ int main(int argc, char* argv[]) {
 					counter+=match;
 					counterDivMatch = counter/match;
 					*/
+					counter++;
+					counterScore += match;
 				}
 				string temp = commonSeq1;
 				//skip over the same common sequences, dont push them to vector
 				if (!(find(overlaps.begin(), overlaps.end(), temp) != overlaps.end())) {
 					overlaps.push_back(commonSeq1);
 				}
-				//overlaps.push_back(*commonSeq2);
+				temp = commonSeq2;
+				if (!(find(overlaps2.begin(), overlaps2.end(), temp) != overlaps2.end())) {
+					overlaps2.push_back(commonSeq2);
+				}
 
 				//print consensus sequence
 				//cout << "consesus a :" << commonSeq1 <<endl;
@@ -321,6 +327,27 @@ int main(int argc, char* argv[]) {
 
 			//sort overlaps alphabetically
 			sort(overlaps.begin(), overlaps.end());
+			sort(overlaps2.begin(), overlaps2.end());
+
+/*
+			for(int i = 0; i < (int) overlaps.size(); i++) {
+				if (overlaps[i] != overlaps2[i]) {
+					cout << overlaps[i] <<endl;
+					cout<<overlaps2[i] <<endl;
+					counterScore += mismatchValue;
+				}
+			}
+			*/
+
+			for (int i=counter-1; i>=0; i--) {
+					if (commonSeq1[i] != commonSeq2[i]) {
+							mismatchCount++;
+					}
+			}
+			cout << mismatchCount<<endl;
+			counterScore += mismatchCount * mismatchValue;
+			counterScore -= mismatchCount * match;
+
 			vector<string> sortedLetters;
 			string newLetter = "";
 
@@ -375,6 +402,7 @@ int main(int argc, char* argv[]) {
 			output.close();
 
 			overlaps.clear();
+			overlaps2.clear();
 
 			mismatchCount = 0;
 		}
