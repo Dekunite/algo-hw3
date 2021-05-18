@@ -39,13 +39,15 @@ double checkSimilarity(char char1, char char2) {
 	return result;
 }
 
-double findMaximum(double traceback[]) {
-	double max = traceback[0];
+double findMaximum(double boxes[]) {
+	//start with the first box
+	double max = boxes[0];
 	index = 0;
 
+	//check boxes for the max value
 	for(int i = 1; i < 4; i++) {
-		if(traceback[i] > max) {
-			max = traceback[i];
+		if(boxes[i] > max) {
+			max = boxes[i];
 			index=i;
 		}
 	}
@@ -62,23 +64,18 @@ int main(int argc, char* argv[]) {
 	outputFname = "output.txt";
 	if (argc > 1) {
 		fname = argv[1];
-		cout << "fname: " << fname <<endl;;
 	}
 	if (argc > 2) {
 		outputFname = argv[2];
-		cout << "outputFname: " << outputFname <<endl;;
 	}
 	if (argc > 3) {
 		match = atoi(argv[3]);
-		cout << "match: " << match <<endl;;
 	}
 	if (argc > 4) {
 		mismatchValue = atoi(argv[4]);
-		cout << "mismatchValue: " << mismatchValue <<endl;;
 	}
 	if (argc > 5) {
 		gap = atoi(argv[5]);
-		cout << "gap: " << gap <<endl;;
 	}
 	/*
 	*/
