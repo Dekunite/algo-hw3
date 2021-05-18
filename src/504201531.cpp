@@ -24,13 +24,15 @@ double match = 1;
 int mismatchCount = 0;
 int index;
 
-double checkSimilarity(char a, char b) {
+double checkSimilarity(char char1, char char2) {
 	double result;
 
-	if(a == b) {
+	if(char1 == char2) {
+		//return match value
 		result = match;
 	}
 	else {
+		//return mismatch value if a not equals b
 		result = mismatchValue;
 	}
 
@@ -115,7 +117,7 @@ int main(int argc, char* argv[]) {
 			secondWordCounter++;
 		}
 		for (; secondWordCounter < (int)words.size(); secondWordCounter++) {
-
+			//assing words
 			word1 = words[firstWordCounter];
 			word2 = words[secondWordCounter];
 
@@ -123,6 +125,7 @@ int main(int argc, char* argv[]) {
 			int length1 = word1.length();
 			int length2 = word2.length();
 
+			//common sequences in word1 and word2
 			char commonSeq1[length1 + length2 + 2];
 			char commonSeq2[length1 + length2 + 2];
 
@@ -130,11 +133,12 @@ int main(int argc, char* argv[]) {
 			double matrix[length1+1][length2+1];
 			for(int i = 0; i <= length1; i++) {
 				for(int j = 0; j <= length2; j++) {
-					//her yeri 0 la
+					//init as 0
 					matrix[i][j]=0;
 				}
 			}
 
+			//traceback array
 			double traceback[4];
 			int matrixI[length1+1][length2+1];
 			int matrixJ[length1+1][length2+1];
@@ -142,13 +146,14 @@ int main(int argc, char* argv[]) {
 			//filling the matrix
 			for(int i = 1; i <= length1; i++) {
 				for(int j = 1; j <= length2; j++) {
-					//cout << i << " " << j << endl;
 					traceback[0] = matrix[i-1][j-1] + checkSimilarity(word1[i-1], word2[j-1]);
 					traceback[1] = matrix[i-1][j] + gap;
 					traceback[2] = matrix[i][j-1] + gap;
 					traceback[3] = 0;
+					//find the max score in the traceback aray
 					matrix[i][j] = findMaximum(traceback);
 
+					//fill out matrix accordingly
 					switch(index)
 					{
 						case 0:
@@ -214,8 +219,6 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
-			//cout << "Max score in the matrix is " << maximum << endl;
-
 			for (int k = 0; k < (int)iAndJMax.size(); k += 2) {
 				//assign the pair of max i and j
 				maxI = iAndJMax[k];
@@ -232,26 +235,26 @@ int main(int argc, char* argv[]) {
 				while(((currentI != nextI) || (currentJ != nextJ)) && (nextI >= 0) && (nextJ >= 0)) {
 
 					if(nextI == currentI) {
-						//deletion in A
 						commonSeq1[counter] = '-';
 					} else {
-						//match/mismatch in A
+						//add matching letter to common sequence
 						commonSeq1[counter] = word1[currentI-1];
 					}
 
 					if(nextJ == currentJ) {
-						//deletion in B
 						commonSeq2[counter] = '-';
 					} else {
-						//match/mismatch in B
+						//add matching letter to common sequence
 						commonSeq2[counter] = word2[currentJ-1];
 					}
 
+					//change nextI and nextJ values to prevent infinite loop
 					if (nextI == 0) {
 						nextI = -1;
 					} else if (nextJ == 0) {
 						nextJ = -1;
 					} else {
+						//continue iteration by getting next elements in line
 						currentI = nextI;
 						currentJ = nextJ;
 						nextI = matrixI[currentI][currentJ];
@@ -276,6 +279,7 @@ int main(int argc, char* argv[]) {
 			sort(overlaps.begin(), overlaps.end());
 			sort(overlaps2.begin(), overlaps2.end());
 
+			//calculate the mismatch count between words for score calculation
 			for (int i=counter-1; i>=0; i--) {
 				if (commonSeq1[i] != commonSeq2[i]) {
 					mismatchCount++;
@@ -289,6 +293,8 @@ int main(int argc, char* argv[]) {
 
 			//cout << word1 << " - " << word2 << endl;
 			//cout << "Score: " << counterScore << " Sequence(s): " ;
+
+			//select out letters from common sequences
 			for (int i = 0; i < (int)overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
 				
@@ -300,8 +306,11 @@ int main(int argc, char* argv[]) {
 				newLetter = "";
 			}
 
-			//sort common sequences alphabetically
+			//sort selected letters alphabetically
 			sort(sortedLetters.begin(),sortedLetters.end());
+
+			/*
+			//UNUSED PRINT
 			for(int i = 0; i < (int)sortedLetters.size(); i++) {
 				//cout << "\"" ;
 				//cout << sortedLetters[i];
@@ -312,6 +321,7 @@ int main(int argc, char* argv[]) {
 				//}
 			}
 			//cout << endl;
+			*/
 
 			//write to output file
 			ofstream output;
@@ -336,9 +346,11 @@ int main(int argc, char* argv[]) {
 			output << endl;
 			output.close();
 
+			//clear vectors
 			overlaps.clear();
 			overlaps2.clear();
 
+			//reset mismatch count
 			mismatchCount = 0;
 		}
 
