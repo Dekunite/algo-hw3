@@ -98,19 +98,6 @@ int main(int argc, char* argv[]) {
 	//sort words alphabetically
 	sort(words.begin(), words.end());
 
-	/*
-	//print words
-	for (int i=0; i< (int)words.size(); i++) {
-		cout << words.at(i) << endl;
-	}
-	*/
-
-	/*
-	string word1 = words[1];
-	string word2 = words[2];
-	cout << "word1: " << word1 << " word2: " << word2 << endl;
-	*/
-
 	string word1, word2;
 	int firstWordCounter = 0;
 	int secondWordCounter = 0;
@@ -244,16 +231,12 @@ int main(int argc, char* argv[]) {
 
 				while(((currentI != nextI) || (currentJ != nextJ)) && (nextI >= 0) && (nextJ >= 0)) {
 
-					//cout << word1[currentI-1] << endl;
-
 					if(nextI == currentI) {
 						//deletion in A
 						commonSeq1[counter] = '-';
 					} else {
 						//match/mismatch in A
 						commonSeq1[counter] = word1[currentI-1];
-						//counter++;
-						//counterScore += match;
 					}
 
 					if(nextJ == currentJ) {
@@ -261,7 +244,6 @@ int main(int argc, char* argv[]) {
 						commonSeq2[counter] = '-';
 					} else {
 						//match/mismatch in B
-						//burada patlıyor
 						commonSeq2[counter] = word2[currentJ-1];
 					}
 
@@ -275,10 +257,6 @@ int main(int argc, char* argv[]) {
 						nextI = matrixI[currentI][currentJ];
 						nextJ = matrixJ[currentI][currentJ];
 					}
-					/*
-					counter+=match;
-					counterDivMatch = counter/match;
-					*/
 					counter++;
 					counterScore += match;
 				}
@@ -292,67 +270,25 @@ int main(int argc, char* argv[]) {
 					overlaps2.push_back(commonSeq2);
 				}
 
-				//print consensus sequence
-				//cout << "consesus a :" << commonSeq1 <<endl;
-				//cout << "consesus b :" << commonSeq2 <<endl;
-				//print output
-				/*
-					cout << word1 << " - " << word2 << endl;
-					cout << "Score: " << counter << " Sequence(s): " ;
-					cout << "\"" ;
-				for (int i = 0; i < overlaps.size(); i++) {
-					*commonSeq1 = overlaps[i];
-					for(int i = counter-1; i>=0; i--) {
-						cout<<commonSeq1[i]; 
-					} 
-				}
-					cout << "\"" << endl;
-					*/
-
-				/*
-				//ptritn conssss
-				cout << commonSeq1 <<endl;
-				cout << commonSeq2 <<endl;
-
-				for(int i = counter-1; i>=0; i--) {
-					cout<<commonSeq1[i]; 
-				}
-				cout<<endl;
-				for(int j = counter-1; j>=0; j--) {
-					cout<<commonSeq2[j];
-				}
-				cout<<endl;
-				*/
 			}
 
 			//sort overlaps alphabetically
 			sort(overlaps.begin(), overlaps.end());
 			sort(overlaps2.begin(), overlaps2.end());
 
-/*
-			for(int i = 0; i < (int) overlaps.size(); i++) {
-				if (overlaps[i] != overlaps2[i]) {
-					cout << overlaps[i] <<endl;
-					cout<<overlaps2[i] <<endl;
-					counterScore += mismatchValue;
+			for (int i=counter-1; i>=0; i--) {
+				if (commonSeq1[i] != commonSeq2[i]) {
+					mismatchCount++;
 				}
 			}
-			*/
-
-			for (int i=counter-1; i>=0; i--) {
-					if (commonSeq1[i] != commonSeq2[i]) {
-							mismatchCount++;
-					}
-			}
-			cout << mismatchCount<<endl;
 			counterScore += mismatchCount * mismatchValue;
 			counterScore -= mismatchCount * match;
 
 			vector<string> sortedLetters;
 			string newLetter = "";
 
-			cout << word1 << " - " << word2 << endl;
-			cout << "Score: " << counterScore << " Sequence(s): " ;
+			//cout << word1 << " - " << word2 << endl;
+			//cout << "Score: " << counterScore << " Sequence(s): " ;
 			for (int i = 0; i < (int)overlaps.size(); i++) {
 				string overlapLetters = overlaps[i];
 				
@@ -367,18 +303,17 @@ int main(int argc, char* argv[]) {
 			//sort common sequences alphabetically
 			sort(sortedLetters.begin(),sortedLetters.end());
 			for(int i = 0; i < (int)sortedLetters.size(); i++) {
-				cout << "\"" ;
-				cout << sortedLetters[i];
-				if(i == (int)(sortedLetters.size()-1)) {
-					cout << "\"";
-				} else {
-					cout << "\" ";
-				}
+				//cout << "\"" ;
+				//cout << sortedLetters[i];
+				//if(i == (int)(sortedLetters.size()-1)) {
+					//cout << "\"";
+				//} else {
+					//cout << "\" ";
+				//}
 			}
-			cout << endl;
+			//cout << endl;
 
 			//write to output file
-			//int score = counterScore + (mismatchCount * mismatchValue);
 			ofstream output;
 			output.open(outputFname, std::ios_base::app);
 			output << word1 << " - " << word2 << endl;
